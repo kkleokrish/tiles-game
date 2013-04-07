@@ -1,0 +1,101 @@
+<html>
+<!--
+ This code is licensed under MIT open source license.
+-->
+<head>
+<title>Tiles Game</title>
+<style type="text/css">
+body {
+margin-left:auto;
+margin-right:auto;
+width:70%;
+color : #000;
+background: #ccc;
+font-family: arial,sans-serif;
+text-align: center;
+align: center;
+}
+.result {font: bold 30px arial,sans-serif;} 
+
+.scoreboard {display: table-row;}
+.scoreboard-cell {border: 10px solid green;display:table-cell; padding:4px; background-color:#000; color:#fff; font: bold 15px arial,sans-serif;} 
+.scoreboard-legend {width:20px;} 
+.winner {background-color:#ffd700; color:#000;}
+
+.tablewrapper {display:inline-block;}
+.blockbreaker {display:block;}
+.tileboard {border: 2px solid black; width:160px}
+.tile {width:20px;}
+.newrow {display:table-row;}
+.currentrow { border: 2px solid white; display:table-cell;}
+.player-1 {background-color:#666;}
+.player0 {background-color:#f00;}
+.player1 {background-color:#00f;}
+
+</style>
+<script src="Tiles.js">
+</script>
+<script>
+var size=7;
+var win=4;
+var game=new com.kkleokrish.tiles.Game(size,win);
+
+function startGame() {
+	game.reset();
+	game.dump();
+	renderBoard();
+	document.getElementById("scoreboard-player0").className=document.getElementById("scoreboard-player0").className.replace(/\bwinner\b/,'');
+	document.getElementById("scoreboard-player1").className=document.getElementById("scoreboard-player1").className.replace(/\bwinner\b/,'');
+	
+	document.getElementById("result").innerHTML="Game in progress...";
+	game.onTilePlaced=function (row,column,player) {
+		document.getElementById("tile-" + row+ "-" + column).className += ' player' + player;	
+		if (game.complete) {
+			if (game.won) {
+				document.getElementById("result").innerHTML="... and the winner is " + document.getElementById("scoreboard-player" + game.currentPlayer).innerHTML;
+				document.getElementById("scoreboard-player" + game.currentPlayer).className+=" winner"
+			} else {
+				document.getElementById("result").innerHTML="... and it's a draw.";
+			}
+			game.dump();
+		}
+	}
+	game.autoplay();
+}
+function renderBoard() {
+	var boardHtml="";
+	for (var i=0;i<size; i++) {
+		boardHtml+="<div class='newrow'>";
+		for (var j=0;j<size; j++) {
+			boardHtml+="<div id='tile-" + i+ "-" + j + "' class='tile currentrow player" + game.board[i][j]+ "'>&nbsp;</div>";			
+		}
+		boardHtml+="</div>";
+	}
+	document.getElementById("theboard").innerHTML=boardHtml;
+}
+</script>
+<body onload="renderBoard();">
+<h1>
+Welcome to Tiles Game! 
+</h1>
+<div id="result" class="result">
+Clash of the Titans !!!
+</div>
+<div class="tablewrapper">
+<div id="players" class="scoreboard">
+<div class="scoreboard-cell scoreboard-legend player0">&nbsp;</div>
+<div id="scoreboard-player0" class="scoreboard-cell">Tile Player Robot 0</div>
+<div class="scoreboard-cell scoreboard-legend player-1">&nbsp;</div>
+<div id="scoreboard-player1" class="scoreboard-cell">Tile Player Robot 1</div>
+<div class="scoreboard-cell scoreboard-legend player1">&nbsp;</div>
+</div>
+</div>
+<div class="blockbreaker"></div>
+<input type="button" onclick="startGame();" value="Start Game!">
+<div class="blockbreaker"></div>
+<div class="tablewrapper">
+<div id="theboard" class="tileboard">
+</div>
+</div>
+</body>
+</head>

@@ -1,0 +1,125 @@
+<html>
+<!--
+ This code is licensed under MIT open source license.
+-->
+<head>
+<title>Tiles Game</title>
+<style type="text/css">
+body {
+margin-left:auto;
+margin-right:auto;
+width:70%;
+color : #000;
+background: #ccc;
+font-family: arial,sans-serif;
+text-align: center;
+align: center;
+}
+.result {font: bold 30px arial,sans-serif;} 
+
+.scoreboard {display: table-row;}
+.scoreboard-cell {border: 10px solid green;display:table-cell; padding:4px; background-color:#000; color:#fff; font: bold 15px arial,sans-serif;} 
+.scoreboard-legend {width:20px;} 
+.winner {background-color:#ffd700; color:#000;}
+
+.tablewrapper {display:inline-block;}
+.blockbreaker {display:block;}
+.tileboard {border: 2px solid black; width:160px}
+.tile {width:20px;cursor: pointer;}
+.newrow {display:table-row;}
+.currentrow { border: 2px solid white; display:table-cell;}
+.player-1 {background-color:#666;}
+.player0 {background-color:#f00;}
+.player1 {background-color:#00f;}
+
+</style>
+<script src="Tiles.js">
+</script>
+<script>
+var size=7;
+var win=4;
+var game=new com.kkleokrish.tiles.Game(size,win);
+var robot;
+var withRobot=false;
+function startGame(isWithRobot, robotFirst) {
+	game.reset();
+	game.dump();
+	document.getElementById("scoreboard-player0").innerHTML="Tile Player 1";
+	 document.getElementById("scoreboard-player0").className=document.getElementById("scoreboard-player0").className.replace(/\bwinner\b/,'');
+	document.getElementById("scoreboard-player1").innerHTML="Tile Player 2";
+	document.getElementById("scoreboard-player1").className=document.getElementById("scoreboard-player1").className.replace(/\bwinner\b/,'');
+	renderBoard();
+	document.getElementById("result").innerHTML="Game in progress...";
+	game.onTilePlaced=function (row,column,player) {
+		document.getElementById("tile-" + row+ "-" + column).className += ' player' + player;	
+		if (game.complete) {
+			if (game.won) {
+				document.getElementById("result").innerHTML="... and the winner is " + document.getElementById("scoreboard-player" + game.currentPlayer).innerHTML;
+				document.getElementById("scoreboard-player" + game.currentPlayer).className+=" winner"
+			}
+			game.dump();
+		} 
+	}
+	
+	withRobot=isWithRobot;
+	if (withRobot) {
+		if (robotFirst) {
+			robot=new com.kkleokrish.tiles.TilePlayerRobot(0,game)
+			document.getElementById("scoreboard-player0").innerHTML="Tiles Robot";
+			robot.playNextMove();
+		} else {
+			robot=new com.kkleokrish.tiles.TilePlayerRobot(1,game)
+			document.getElementById("scoreboard-player1").innerHTML="Tiles Robot";
+		}
+	}
+}
+
+function play(row, column) {
+	var tilePlaced=game.placeTile(row,column);
+	if (tilePlaced && withRobot) {
+		robot.playNextMove();
+	}
+}
+
+function renderBoard() {
+	var boardHtml="";
+	for (var i=0;i<size; i++) {
+		boardHtml+="<div class='newrow'>";
+		for (var j=0;j<size; j++) {
+			boardHtml+="<div onclick='play("+ i +"," + j+")' id='tile-" + i+ "-" + j + "' class='tile currentrow player" + game.board[i][j]+ "'>&nbsp;</div>";			
+		}
+		boardHtml+="</div>";
+	}
+	document.getElementById("theboard").innerHTML=boardHtml;
+}
+</script>
+<body onload="renderBoard();">
+<h1>
+Welcome to Tiles Game! 
+</h1>
+<h2>
+Objective is to line up 4 of your tiles either horizontally or vertically or diagonally
+</h2>
+<div id="result" class="result">
+Clash of the Titans !!!
+</div>
+<div class="tablewrapper">
+<div id="players" class="scoreboard">
+<div class="scoreboard-cell scoreboard-legend player0">&nbsp;</div>
+<div id="scoreboard-player0" class="scoreboard-cell">Tile Player 1</div>
+<div class="scoreboard-cell scoreboard-legend player-1">&nbsp;</div>
+<div id="scoreboard-player1" class="scoreboard-cell">Tile Player 2</div>
+<div class="scoreboard-cell scoreboard-legend player1">&nbsp;</div>
+</div>
+</div>
+<div class="blockbreaker"></div>
+<input type="button" onclick="startGame(false);" value="Start Game!"> 
+<input type="button" onclick="startGame(true,true);" value="Play with Robot! (Robot First)">
+<input type="button" onclick="startGame(true,false);" value="Play with Robot! (Me First)">
+<div class="blockbreaker"></div>
+<div class="tablewrapper">
+<div id="theboard" class="tileboard">
+</div>
+</div>
+</body>
+</head>
