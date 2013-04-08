@@ -1,0 +1,31 @@
+/*
+* This code is licensed under MIT open source license.
+*/
+body {
+margin-left:auto;
+margin-right:auto;
+width:70%;
+color : #000;
+background: #ccc;
+font-family: arial,sans-serif;
+text-align: center;
+align: center;
+}
+
+.logo {vertical-align:middle; height:64px;}
+.result {font: bold 30px arial,sans-serif;} 
+
+.scoreboard {display: table-row;}
+.scoreboard-cell {border: 10px solid green;display:table-cell; padding:4px; background-color:#000; color:#fff; font: bold 15px arial,sans-serif;} 
+.scoreboard-legend {width:20px;} 
+.winner {background-color:#ffd700; color:#000;}
+
+.tablewrapper {display:inline-block;}
+.blockbreaker {display:block;}
+.tileboard {border: 2px solid black; width:160px}
+.tile {width:20px;cursor: pointer;}
+.newrow {display:table-row;}
+.currentrow { border: 2px solid white; display:table-cell;}
+.player-1 {background-color:#666;}
+.player0 {background-color:#f00;}
+.player1 {background-color:#00f;}
