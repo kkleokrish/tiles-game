@@ -6,7 +6,7 @@ var win=4;
 var game=new com.kkleokrish.tiles.Game(size,win);
 var robot;
 var withRobot=false;
-function startGame(isWithRobot, robotFirst) {
+function startGame(isWithRobot, robotFirst,autoplay) {
 	game.reset();
 	game.dump();
 	document.getElementById("scoreboard-player0").innerHTML="Tile Player 1";
@@ -25,16 +25,19 @@ function startGame(isWithRobot, robotFirst) {
 			game.dump();
 		} 
 	}
-	
-	withRobot=isWithRobot;
-	if (withRobot) {
-		if (robotFirst) {
-			robot=new com.kkleokrish.tiles.TilePlayerRobot(0,game)
-			document.getElementById("scoreboard-player0").innerHTML="Tiles Robot";
-			robot.playNextMove();
-		} else {
-			robot=new com.kkleokrish.tiles.TilePlayerRobot(1,game)
-			document.getElementById("scoreboard-player1").innerHTML="Tiles Robot";
+	if (autoplay) {
+		game.autoplay();
+	} else {
+		withRobot=isWithRobot;
+		if (withRobot) {
+			if (robotFirst) {
+				robot=new com.kkleokrish.tiles.TilePlayerRobot(0,game)
+				document.getElementById("scoreboard-player0").innerHTML="Tiles Robot";
+				robot.playNextMove();
+			} else {
+				robot=new com.kkleokrish.tiles.TilePlayerRobot(1,game)
+				document.getElementById("scoreboard-player1").innerHTML="Tiles Robot";
+			}
 		}
 	}
 }
